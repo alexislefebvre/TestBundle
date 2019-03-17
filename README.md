@@ -18,7 +18,6 @@ Documentation
 * [Installation](doc/installation.md)
 * [Basic usage](doc/basic.md)
 * [Command test](doc/command.md)
-* [Database test](doc/database.md)
 * [Logged client](doc/logged.md)
 * [Query counter](doc/query.md)
 * [Examples](doc/examples.md)

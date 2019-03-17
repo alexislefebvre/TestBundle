@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace AlexisLefebvre\TestBundle\Tests\Test;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use AlexisLefebvre\TestBundle\Annotations\DisableDatabaseCache;
 use AlexisLefebvre\TestBundle\Annotations\QueryCount;
 use AlexisLefebvre\TestBundle\Test\WebTestCase;
 use AlexisLefebvre\TestBundle\Tests\AppConfig\AppConfigKernel;
@@ -49,8 +48,6 @@ class WebTestCaseConfigTest extends WebTestCase
      */
     public function testIndexAuthenticationArray(): void
     {
-        $this->loadFixtures([]);
-
         $this->client = static::makeClient([
             'username' => 'foobar',
             'password' => '12341234',
@@ -83,8 +80,6 @@ class WebTestCaseConfigTest extends WebTestCase
      */
     public function testIndexAuthenticationTrue(): void
     {
-        $this->loadFixtures([]);
-
         $this->client = static::makeClient(true);
 
         $path = '/';
@@ -112,20 +107,20 @@ class WebTestCaseConfigTest extends WebTestCase
      */
     public function testIndexAuthenticationLoginAs(): void
     {
-        $fixtures = $this->loadFixtures([
-            'AlexisLefebvre\TestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
-        ]);
-
-        /** @var \Doctrine\Common\DataFixtures\ReferenceRepository $repository */
-        $repository = $fixtures->getReferenceRepository();
-
-        $loginAs = $this->loginAs($repository->getReference('user'),
-            'secured_area');
-
-        $this->assertInstanceOf(
-            'AlexisLefebvre\TestBundle\Test\WebTestCase',
-            $loginAs
-        );
+//        $fixtures = $this->loadFixtures([
+//            'AlexisLefebvre\TestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
+//        ]);
+//
+//        /** @var \Doctrine\Common\DataFixtures\ReferenceRepository $repository */
+//        $repository = $fixtures->getReferenceRepository();
+//
+//        $loginAs = $this->loginAs($repository->getReference('user'),
+//            'secured_area');
+//
+//        $this->assertInstanceOf(
+//            'AlexisLefebvre\TestBundle\Test\WebTestCase',
+//            $loginAs
+//        );
 
         $this->client = static::makeClient();
 
@@ -160,17 +155,6 @@ class WebTestCaseConfigTest extends WebTestCase
      */
     public function testAllowedQueriesExceededException(): void
     {
-        $fixtures = $this->loadFixtures([
-            'AlexisLefebvre\TestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
-        ]);
-
-        /** @var \Doctrine\Common\DataFixtures\ReferenceRepository $repository */
-        $repository = $fixtures->getReferenceRepository();
-
-        // There will be one query to log in the first user.
-        $this->loginAs($repository->getReference('user'),
-            'secured_area');
-
         $this->client = static::makeClient();
 
         // One another query to load the second user.
@@ -191,185 +175,11 @@ class WebTestCaseConfigTest extends WebTestCase
      */
     public function testAnnotationAndException(): void
     {
-        $this->loadFixtures([
-            'AlexisLefebvre\TestBundle\Tests\App\DataFixtures\ORM\LoadUserData',
-        ]);
-
         $this->client = static::makeClient();
 
         // One query to load the second user
         $path = '/user/1';
 
         $this->client->request('GET', $path);
-    }
-
-    /**
-     * Load Data Fixtures with custom loader defined in configuration.
-     */
-    public function testLoadFixturesFilesWithCustomProvider(): void
-    {
-        // Load default Data Fixtures.
-        $fixtures = $this->loadFixtureFiles([
-            '@AcmeBundle/DataFixtures/ORM/user.yml',
-        ]);
-
-        $this->assertInternalType(
-            'array',
-            $fixtures
-        );
-
-        // 10 users are loaded
-        $this->assertCount(
-            10,
-            $fixtures
-        );
-
-        /** @var \AlexisLefebvre\TestBundle\Tests\App\Entity\User $user */
-        $user = $fixtures['id1'];
-
-        // The custom provider has not been used successfully.
-        $this->assertStringStartsNotWith(
-            'foo',
-            $user->getName()
-        );
-
-        // Load Data Fixtures with custom loader defined in configuration.
-        $fixtures = $this->loadFixtureFiles([
-            '@AcmeBundle/DataFixtures/ORM/user_with_custom_provider.yml',
-        ]);
-
-        /** @var \AlexisLefebvre\TestBundle\Tests\App\Entity\User $user */
-        $user = $fixtures['id1'];
-
-        // The custom provider "foo" has been loaded and used successfully.
-        $this->assertSame(
-            'fooa string',
-            $user->getName()
-        );
-    }
-
-    /**
-     * @DisableDatabaseCache()
-     */
-    public function testCacheCanBeDisabled(): void
-    {
-        // MD5 hash corresponding to these fixtures files.
-        $md5 = '0ded9d8daaeaeca1056b18b9d0d433b2';
-        $databaseFilePath = $this->getContainer()->getParameter('kernel.cache_dir').'/test_sqlite_'.$md5.'.db';
-
-        $fixtures = [
-            'AlexisLefebvre\TestBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
-        ];
-
-        $this->loadFixtures($fixtures);
-
-        // Load data from database
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
-        /** @var \AlexisLefebvre\TestBundle\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('AlexisLefebvreTestBundle:User')->findOneBy(['id' => 1]);
-
-        // Store random data, in order to check it after reloading fixtures.
-        $user1Salt = $user1->getSalt();
-
-        sleep(2);
-
-        // Reload the fixtures.
-        $this->loadFixtures($fixtures);
-
-        /** @var \AlexisLefebvre\TestBundle\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('AlexisLefebvreTestBundle:User')->findOneBy(['id' => 1]);
-
-        //The salt are not the same because cache were not used
-        $this->assertNotSame($user1Salt, $user1->getSalt());
-    }
-
-    /**
-     * Update a fixture file and check that the cache will be refreshed.
-     */
-    public function testBackupIsRefreshed(): void
-    {
-        // MD5 hash corresponding to these fixtures files.
-        $md5 = '0ded9d8daaeaeca1056b18b9d0d433b2';
-
-        $fixtures = [
-            'AlexisLefebvre\TestBundle\Tests\App\DataFixtures\ORM\LoadDependentUserData',
-        ];
-
-        $this->loadFixtures($fixtures);
-
-        // Load data from database
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-
-        /** @var \AlexisLefebvre\TestBundle\Tests\App\Entity\User $user1 */
-        $user1 = $em->getRepository('AlexisLefebvreTestBundle:User')
-            ->findOneBy(['id' => 1]);
-
-        // Store random data, in order to check it after reloading fixtures.
-        $user1Salt = $user1->getSalt();
-
-        $dependentFixtureFilePath = $this->getContainer()->get('kernel')->locateResource(
-            '@AcmeBundle/DataFixtures/ORM/LoadUserData.php'
-        );
-
-        $dependentFixtureFilemtime = filemtime($dependentFixtureFilePath);
-
-        $databaseFilePath = $this->getContainer()->getParameter('kernel.cache_dir').'/test_sqlite_'.$md5.'.db';
-
-        if (!is_file($databaseFilePath)) {
-            $this->markTestSkipped($databaseFilePath.' is not a file.');
-        }
-
-        $databaseFilemtime = filemtime($databaseFilePath);
-
-        sleep(2);
-
-        // Reload the fixtures.
-        $this->loadFixtures($fixtures);
-
-        // The mtime of the file has not changed.
-        $this->assertSame(
-            $dependentFixtureFilemtime,
-            filemtime($dependentFixtureFilePath),
-            'File modification time of the fixture has been updated.'
-        );
-
-        // The backup has not been updated.
-        $this->assertSame(
-            $databaseFilemtime,
-            filemtime($databaseFilePath),
-            'File modification time of the backup has been updated.'
-        );
-
-        $user1 = $em->getRepository('AlexisLefebvreTestBundle:User')->findOneBy(['id' => 1]);
-
-        // Check that random data has not been changed, to ensure that backup was created and loaded successfully.
-        $this->assertSame($user1Salt, $user1->getSalt());
-
-        sleep(2);
-
-        // Update the filemtime of the fixture file used as a dependency.
-        touch($dependentFixtureFilePath);
-
-        $this->loadFixtures($fixtures);
-
-        // The mtime of the fixture file has been updated.
-        $this->assertGreaterThan(
-            $dependentFixtureFilemtime,
-            filemtime($dependentFixtureFilePath),
-            'File modification time of the fixture has not been updated.'
-        );
-
-        // The backup has been refreshed: mtime is greater.
-        $this->assertGreaterThan(
-            $databaseFilemtime,
-            filemtime($databaseFilePath),
-            'File modification time of the backup has not been updated.'
-        );
-
-        $user1 = $em->getRepository('AlexisLefebvreTestBundle:User')->findOneBy(['id' => 1]);
-
-        // Check that random data has been changed, to ensure that backup was not used.
-        $this->assertNotSame($user1Salt, $user1->getSalt());
     }
 }
