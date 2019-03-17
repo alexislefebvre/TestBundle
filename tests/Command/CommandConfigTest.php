@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Liip\FunctionalTestBundle\Tests\Command;
+namespace AlexisLefebvre\TestBundle\Tests\Command;
 
-use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Liip\FunctionalTestBundle\Tests\AppConfig\AppConfigKernel;
+use AlexisLefebvre\TestBundle\Test\WebTestCase;
+use AlexisLefebvre\TestBundle\Tests\AppConfig\AppConfigKernel;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
