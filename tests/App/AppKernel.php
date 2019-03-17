@@ -28,7 +28,7 @@ class AppKernel extends Kernel
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new \AlexisLefebvre\TestBundle\LiipFunctionalTestBundle(),
+            new \AlexisLefebvre\TestBundle\AlexisLefebvreTestBundle(),
             new \AlexisLefebvre\TestBundle\Tests\App\AcmeBundle(),
             new \Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle(),
             new \Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle(),
@@ -60,6 +60,6 @@ class AppKernel extends Kernel
 
     protected function getBaseDir()
     {
-        return sys_get_temp_dir().'/LiipFunctionalTestBundle/'.(new \ReflectionClass($this))->getShortName().'/var/';
+        return sys_get_temp_dir().'/AlexisLefebvreTestBundle/'.(new \ReflectionClass($this))->getShortName().'/var/';
     }
 }

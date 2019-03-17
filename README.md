@@ -27,10 +27,10 @@ To run tests in parallel:
 * [Paratest](doc/paratest.md)
 * [Fastest](doc/fastest.md)
 
-[Travis Master]: https://travis-ci.org/liip/LiipFunctionalTestBundle
-[Travis Master image]: https://travis-ci.org/liip/LiipFunctionalTestBundle.svg?branch=master
-[Scrutinizer]: https://scrutinizer-ci.com/g/liip/LiipFunctionalTestBundle/?branch=master
-[Scrutinizer image]: https://scrutinizer-ci.com/g/liip/LiipFunctionalTestBundle/badges/quality-score.png?b=master
-[Scrutinizer Coverage image]: https://scrutinizer-ci.com/g/liip/LiipFunctionalTestBundle/badges/coverage.png?b=master
+[Travis Master]: https://travis-ci.org/liip/AlexisLefebvreTestBundle
+[Travis Master image]: https://travis-ci.org/liip/AlexisLefebvreTestBundle.svg?branch=master
+[Scrutinizer]: https://scrutinizer-ci.com/g/liip/AlexisLefebvreTestBundle/?branch=master
+[Scrutinizer image]: https://scrutinizer-ci.com/g/liip/AlexisLefebvreTestBundle/badges/quality-score.png?b=master
+[Scrutinizer Coverage image]: https://scrutinizer-ci.com/g/liip/AlexisLefebvreTestBundle/badges/coverage.png?b=master
 [SensioLabsInsight]: https://insight.sensiolabs.com/projects/98b07673-7b35-44f3-acb3-07c33b395118
 [SensioLabsInsight Image]: https://insight.sensiolabs.com/projects/98b07673-7b35-44f3-acb3-07c33b395118/mini.png

@@ -9,7 +9,7 @@ doctrine_phpcr:
         document_managers:
             default:
                 mappings:
-                    LiipFunctionalTestBundle:
+                    AlexisLefebvreTestBundle:
                         type: annotation
                         dir: "%kernel.root_dir%/../AppConfigPhpcr/Document"
                         prefix: 'AlexisLefebvre\TestBundle\Tests\AppConfigPhpcr\Document'

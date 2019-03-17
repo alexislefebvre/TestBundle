@@ -18,7 +18,7 @@ use AlexisLefebvre\TestBundle\DependencyInjection\Compiler\SetTestClientPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class LiipFunctionalTestBundle extends Bundle
+class AlexisLefebvreTestBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {
